@@ -1,0 +1,12 @@
+image: gitpod/workspace-full
+
+tasks:
+  - init: |
+      sudo apt-get update
+      sudo apt-get install -y openjdk-8-jdk
+      wget https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip
+      unzip commandlinetools-linux-6609375_latest.zip -d android-sdk
+      yes | android-sdk/cmdline-tools/bin/sdkmanager --licenses
+      android-sdk/cmdline-tools/bin/sdkmanager "platforms;android-29" "build-tools;29.0.2"
+  - command: |
+      ./gradlew assembleDebug
