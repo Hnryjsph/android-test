@@ -3,10 +3,20 @@ image: gitpod/workspace-full
 tasks:
   - init: |
       sudo apt-get update
-      sudo apt-get install -y openjdk-8-jdk
-      wget https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip
-      unzip commandlinetools-linux-6609375_latest.zip -d android-sdk
-      yes | android-sdk/cmdline-tools/bin/sdkmanager --licenses
-      android-sdk/cmdline-tools/bin/sdkmanager "platforms;android-29" "build-tools;29.0.2"
+      sudo apt-get install -y openjdk-11-jdk wget unzip
+      wget https://dl.google.com/android/repository/commandlinetools-linux-7302050_latest.zip -O cmdline-tools.zip
+      mkdir -p android-sdk/cmdline-tools
+      unzip cmdline-tools.zip -d android-sdk/cmdline-tools
+      yes | android-sdk/cmdline-tools/cmdline-tools/bin/sdkmanager --licenses
+      android-sdk/cmdline-tools/cmdline-tools/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+      echo "export ANDROID_HOME=$HOME/android-sdk" >> ~/.bashrc
+      echo "export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools" >> ~/.bashrc
+      source ~/.bashrc
   - command: |
+      ./gradlew build
       ./gradlew assembleDebug
+
+ports:
+  - port: 8080
+    onOpen: open-preview
+
